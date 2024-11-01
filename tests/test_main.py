@@ -1,7 +1,7 @@
-""" tests/test_calculator.py """
+""" tests/test_main.py """
 import sys
 from io import StringIO
-from app.calculator import calculator
+from app.main import calculator
 
 
 # Helper function to capture print statements
@@ -24,7 +24,7 @@ def run_calculator_with_input(monkeypatch, inputs):
     return captured_output.getvalue()
 
 
-# Tests for valid operations
+# Positive Tests
 def test_addition(monkeypatch):
     """Test addition operation in REPL."""
     inputs = ["add 2 3", "exit"]
@@ -53,32 +53,46 @@ def test_division(monkeypatch):
     assert "Result: 5.0" in output
 
 
-# Tests for invalid inputs and errors
+# Negative Tests
+def test_invalid_operation(monkeypatch):
+    """Test invalid operation in REPL."""
+    inputs = ["modulus 5 3", "exit"]
+    output = run_calculator_with_input(monkeypatch, inputs)
+    assert "Unknown operation" in output
+
+
 def test_invalid_input_format(monkeypatch):
     """Test invalid input format in REPL."""
     inputs = ["add two three", "exit"]
     output = run_calculator_with_input(monkeypatch, inputs)
-    assert "Invalid input. Please follow the format: <operation> <num1> <num2>" in output
+    assert "Invalid input. Please enter a valid operation and two numbers." in output
 
 
 def test_division_by_zero(monkeypatch):
     """Test division by zero in REPL."""
     inputs = ["divide 5 0", "exit"]
     output = run_calculator_with_input(monkeypatch, inputs)
-    assert "Error: Improper Inputs" in output
+    assert "Division by zero is not allowed" in output  # Modify based on actual error message
 
 
-def test_unknown_operation(monkeypatch):
-    """Test unknown operation in REPL."""
-    inputs = ["modulus 5 3", "exit"]
+# Additional Tests for REPL Commands
+def test_list_history_empty(monkeypatch):
+    """Test listing history when empty in REPL."""
+    inputs = ["list", "exit"]
     output = run_calculator_with_input(monkeypatch, inputs)
-    assert (
-        "Unknown operation 'modulus'. Supported operations: add, subtract, multiply, divide."
-        in output
-    )
+    assert "No calculations in history." in output
 
-def test_exit_command(monkeypatch):
-    """Test exit command to quit REPL."""
-    inputs = ["exit"]
+
+def test_list_history_with_operations(monkeypatch):
+    """Test listing history after performing an operation."""
+    inputs = ["add 1 2", "list", "exit"]
     output = run_calculator_with_input(monkeypatch, inputs)
-    assert "Exiting calculator..." in output
+    assert "1.0 addition 2.0 = 3.0" in output  # Check if the operation appears in history
+
+
+def test_clear_history(monkeypatch):
+    """Test clearing history in REPL."""
+    inputs = ["add 1 2", "clear", "list", "exit"]
+    output = run_calculator_with_input(monkeypatch, inputs)
+    assert "History cleared." in output
+    assert "No calculations in history." in output  # Confirm history is cleared

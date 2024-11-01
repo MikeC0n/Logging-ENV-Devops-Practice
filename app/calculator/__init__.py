@@ -32,7 +32,7 @@ def calculator():
             try:
                 result = division(num1, num2)
             except ValueError as e:
-                print(e)
+                print('Error: Improper Inputs')
                 continue
         else:
             print(f"Unknown operation '{operation}'. Supported operations: add, subtract, multiply, divide.")

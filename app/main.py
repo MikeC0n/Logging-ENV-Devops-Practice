@@ -3,6 +3,11 @@
 # ==============================================================================
 # IMPORTING NECESSARY MODULES
 # ==============================================================================
+import os
+# Crucial for accessing info from a .env file
+
+from dotenv import load_dotenv
+# import that loads the ..env file
 
 import logging  # Standard Python module for logging events and messages.
 # Documentation: https://docs.python.org/3/library/logging.html
@@ -25,8 +30,9 @@ from typing import List  # Provides support for type hints.
 
 # Configure the logging settings for the application.
 # Logging is crucial for tracking events and diagnosing issues in applications.
+load_dotenv() # loads .env fil
 logging.basicConfig(
-    filename='calculator.log',  # Specifies the file to write log messages to.
+    filename=os.getenv("logging_file"),  # Specifies the file to write log messages to.
     level=logging.DEBUG,  # Sets the logging level to DEBUG; captures all levels (DEBUG, INFO, WARNING, ERROR, CRITICAL).
     format='%(asctime)s - %(levelname)s - %(message)s'  # Defines the format of the log messages.
     # Format placeholders:

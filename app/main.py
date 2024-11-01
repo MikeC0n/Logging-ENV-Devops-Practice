@@ -451,9 +451,14 @@ def calculator():
                 print(f"Unknown operation '{operation_str}'. Type 'help' for available commands.")
 
         except ValueError as e:
+            # Check if it's a division-by-zero error specifically
+            if str(e) == "Division by zero is not allowed.":
+                logging.error(f"Invalid input or error: Division by zero is not allowed") # Log the error
+                print("Division by zero is not allowed. Please enter a valid operation and two numbers. Type 'help' for instructions.")
+            else:
             # Handle errors such as incorrect input format or invalid numbers.
-            logging.error(f"Invalid input or error: {e}")  # Log the error.
-            print("Invalid input. Please enter a valid operation and two numbers. Type 'help' for instructions.")
+                logging.error(f"Invalid input or error: {e}")  # Log the error.
+                print("Invalid input. Please enter a valid operation and two numbers. Type 'help' for instructions.")
 
 # Why use a REPL?
 # - Provides an interactive way for users to execute commands and see immediate results.
